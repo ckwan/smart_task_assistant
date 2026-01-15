@@ -1,5 +1,6 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
 from sqlalchemy.sql import func
+from app.utils.enum import TaskStatus
 from .base import Base
 
 class Task(Base):
@@ -8,7 +9,7 @@ class Task(Base):
     project_id = Column(Integer, ForeignKey("projects.id"))
     title = Column(String, nullable=False)
     description = Column(String)
-    status = Column(String, default="TODO")  # TODO / IN_PROGRESS / DONE
+    status = Column(String, default=TaskStatus.TODO)  # TODO / IN_PROGRESS / DONE
     assigned_user_id = Column(Integer, ForeignKey("users.id"), nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())

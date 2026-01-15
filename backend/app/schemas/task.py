@@ -5,7 +5,9 @@ class TaskCreate(BaseModel):
     project_id: int
     title: str
     description: str | None
+    status: str = "TODO"  # TODO / IN_PROGRESS / DONE
     assigned_user_id: int | None
+
 
 class TaskResponse(TaskCreate):
     id: int
