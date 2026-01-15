@@ -32,6 +32,9 @@ services:
     ports:
       - "${RABBITMQ_PORT_1}:${RABBITMQ_PORT_1}"
       - "${RABBITMQ_PORT_2}:${RABBITMQ_PORT_2}"
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
 
   worker:
     build: ./backend

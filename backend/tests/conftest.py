@@ -1,6 +1,6 @@
 # tests/conftest.py
 import pytest
-from sqlalchemy import create_engine
+from sqlalchemy import text, create_engine
 from sqlalchemy.orm import sessionmaker
 from app.models.base import Base
 from app.config import DATABASE_URL
@@ -21,6 +21,13 @@ def db_session():
     session = TestingSessionLocal(bind=connection)
     try:
         yield session  # <- test runs here
+
+        # Cleanup: truncate tables after the test
+        session.execute(text("TRUNCATE TABLE users RESTART IDENTITY CASCADE;"))
+        session.execute(text("TRUNCATE TABLE projects RESTART IDENTITY CASCADE;"))
+        session.execute(text("TRUNCATE TABLE tasks RESTART IDENTITY CASCADE;"))
+
+        session.commit()
     finally:
         session.close()
         transaction.rollback()  # ensures all DB changes are undone

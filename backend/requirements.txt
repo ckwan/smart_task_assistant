@@ -1,10 +1,12 @@
 fastapi
 uvicorn
 celery[redis]
+celery[rabbitmq]
 requests
 python-dotenv
 psycopg2-binary
 pytest
+pytest-cov
 pytest-asyncio
 httpx
 pytest-mock

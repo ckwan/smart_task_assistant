@@ -36,6 +36,8 @@ The diagram below illustrates request flow, data persistence, and async task exe
 
 ![System Architecture Diagram](diagrams/smart_task_assistant_diagram.png)
 
+![Swagger OpenAPI Documentation](diagrams/openapi.png)
+
 ## Async Workflow
 1. The client sends a request to create or enhance a task.
 2. FastAPI validates authentication and persists initial task data.

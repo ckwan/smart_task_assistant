@@ -39,7 +39,7 @@ jobs:
 
     - name: Load environment variables
       run: |
-        echo "DATABASE_URL=postgresql+psycopg2://${{ secrets.POSTGRES_USER }}:${{ secrets.POSTGRES_PASSWORD }}@localhost:5432/${{ secrets.TEST_DB_NAME }}" >> $GITHUB_ENV
+        echo "DATABASE_URL=postgresql+psycopg2://${{ secrets.POSTGRES_USER }}:${{ secrets.POSTGRES_PASSWORD }}@localhost:5432/${{ secrets.POSTGRES_DB }}" >> $GITHUB_ENV
     - name: Run tests with coverage
       run: |
         pytest --cov=app --cov-report=term-missing --cov-fail-under=70
