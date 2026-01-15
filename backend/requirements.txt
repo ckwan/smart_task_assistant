@@ -4,3 +4,12 @@ celery[redis]
 requests
 python-dotenv
 psycopg2-binary
+pytest
+pytest-asyncio
+httpx
+pytest-mock
+PyJWT
+sqlalchemy
+argon2-cffi
+passlib[argon2]
+python-jose

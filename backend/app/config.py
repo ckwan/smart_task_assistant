@@ -1,6 +1,6 @@
 import os
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, declarative_base
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 import jwt
@@ -13,6 +13,7 @@ import jwt
 DATABASE_URL = os.getenv("DATABASE_URL", "postgresql+psycopg2://postgres:postgres@db:5432/taskdb")
 SECRET_KEY = os.getenv("SECRET_KEY", "your_secret_key") # Replace with a secure key in production
 JWT_ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_MINUTES= 60
 
 # -------------------------------------------------------------------
 # DATABASE SETUP
