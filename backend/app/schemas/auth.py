@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 class SignupRequest(BaseModel):
     name: str
@@ -12,3 +12,6 @@ class LoginRequest(BaseModel):
 class TokenResponse(BaseModel):
     access_token: str
     token_type: str
+
+    # Pydantic v2 replacement for orm_mode
+    model_config = ConfigDict(from_attributes=True)

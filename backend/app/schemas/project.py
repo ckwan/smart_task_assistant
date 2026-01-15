@@ -1,4 +1,5 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
+from typing import Optional
 
 class ProjectCreate(BaseModel):
     name: str
@@ -8,5 +9,5 @@ class ProjectResponse(ProjectCreate):
     id: int
     owner_id: int
 
-    class Config:
-        orm_mode = True
+    # Pydantic v2 replacement for orm_mode
+    model_config = ConfigDict(from_attributes=True)

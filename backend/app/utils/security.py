@@ -1,6 +1,4 @@
 from passlib.context import CryptContext
-import jwt
-from datetime import datetime, timedelta
 
 pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
 

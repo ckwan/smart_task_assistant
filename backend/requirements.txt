@@ -10,6 +10,6 @@ httpx
 pytest-mock
 PyJWT
 sqlalchemy
-argon2-cffi
 passlib[argon2]
+argon2-cffi
 python-jose

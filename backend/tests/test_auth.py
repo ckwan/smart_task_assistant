@@ -9,12 +9,6 @@ from app.config import DATABASE_URL
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-#create engine and session
-engine = create_engine(DATABASE_URL)
-TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
-#create tables if they don’t exist
-Base.metadata.create_all(bind=engine)
 
 client = TestClient(app)
 
