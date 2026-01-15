@@ -1,3 +1,14 @@
+### Why I Built This Project
+
+The Smart Task Assistant was created to demonstrate a production-ready, async backend system capable of:
+
+- Handling task/project CRUD operations with FastAPI and PostgreSQL
+- Processing AI-powered suggestions asynchronously using RabbitMQ and Celery
+- Integrating AI services (LLM/RAG) without blocking API latency
+
+I built this project to explore integrating AI workflows into a real-world backend architecture. This project highlights my ability to design and implement scalable, maintainable backend systems, and shows practical experience with modern async architectures.
+
+
 ## System Architecture
 Smart Task Assistant front/backend system
 
