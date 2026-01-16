@@ -48,6 +48,15 @@ The diagram below illustrates request flow, data persistence, and async task exe
 
 ## Performance & Metrics
 
+### Scalability
+
+The Smart Task Assistant is designed with scalability in mind:
+
+- **Async task processing** via RabbitMQ + Celery allows horizontal scaling of workers for high throughput.
+- **FastAPI backend** handles requests efficiently without blocking on heavy AI computations.
+- **PostgreSQL** serves as the source of truth, supporting multiple concurrent CRUD operations.
+- **AI workflows and notifications** are decoupled, enabling independent scaling as the number of tasks or users grows.
+
 
 ## Future Improvements
 - Redis caching for frequently accessed tasks and project metadata

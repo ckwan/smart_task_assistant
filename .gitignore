@@ -11,3 +11,6 @@ __pycache__/
 *.log
 .vscode/settings.json
 diagrams/smart_task_assistant_diagram.drawio
+
+# frontend
+node_modules/
