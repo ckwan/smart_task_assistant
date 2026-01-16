@@ -1,9 +1,11 @@
 import pytest
 from app.services.project_service import create_project
-from app.services.task_service import create_task, get_task, delete_task, list_tasks, update_task
+from app.services.task_service import create_task, get_task, delete_task, list_tasks, update_task, create_task_and_queue
 from app.schemas.project import ProjectCreate
 from app.schemas.task import TaskCreate
 from app.utils.enum import TaskStatus
+from unittest.mock import patch
+from app.tasks.task_worker import process_task
 
 def test_create_task(db_session):
     project_request = ProjectCreate(name="Valid Name", description="Desc")
@@ -42,23 +44,6 @@ def test_get_task(db_session):
     assert fetched_task["title"] == "Test Task"
 
 
-# TODO: Fix delete task test
-# def test_delete_task(db_session):
-#     project_request = ProjectCreate(name="Valid Name", description="Desc")
-
-#     project = create_project(db_session, project_request, owner_id=1)
-#     task_request = TaskCreate(title="To Delete", description="Delete me", project_id=project["id"], assigned_user_id=None, status=TaskStatus.TODO)
-#     task = create_task(db_session, task_request)
-
-#     deleted = delete_task(db_session, task["id"])
-#     print(deleted)
-#     assert deleted is True
-
-#     # Verify deletion
-#     fetched = get_task(db_session, task["id"])
-#     print(fetched)
-#     assert fetched is None
-
 def test_update_task_in_progress_status(db_session):
     project_request = ProjectCreate(name="Valid Name", description="Desc")
 
@@ -87,3 +72,36 @@ def test_create_task_invalid_project(db_session):
     with pytest.raises(Exception):
         create_task(db_session, "Task", project_id=9999)
 
+
+# test celery task queuing
+def test_create_task_and_queue(db_session):
+    project_request = ProjectCreate(name="Valid Name for testing task queue", description="Desc")
+    project = create_project(db_session, project_request, owner_id=1)
+
+    # mock Celery delay
+    task_request = TaskCreate(title="Async Test Task", description="Async Description", project_id=project["id"], assigned_user_id=None, status=TaskStatus.TODO)
+    print(task_request)
+    with patch.object(process_task, "delay") as mock_delay:
+        task = create_task_and_queue(db_session, task_request)
+        print(task)
+        mock_delay.assert_called_once_with(task["id"])
+        assert task["id"] is not None
+        assert task["status"] == TaskStatus.TODO.value
+
+
+# TODO: Fix delete task test
+# def test_delete_task(db_session):
+#     project_request = ProjectCreate(name="Valid Name", description="Desc")
+
+#     project = create_project(db_session, project_request, owner_id=1)
+#     task_request = TaskCreate(title="To Delete", description="Delete me", project_id=project["id"], assigned_user_id=None, status=TaskStatus.TODO)
+#     task = create_task(db_session, task_request)
+
+#     deleted = delete_task(db_session, task["id"])
+#     print(deleted)
+#     assert deleted is True
+
+#     # Verify deletion
+#     fetched = get_task(db_session, task["id"])
+#     print(fetched)
+#     assert fetched is None

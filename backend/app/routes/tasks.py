@@ -21,3 +21,8 @@ def list_tasks(
     db: Session = Depends(get_db),
 ):
     return task_service.list_tasks(db, project_id)
+
+
+@router.post("/", response_model=TaskResponse)
+def create_task_endpoint(request: TaskCreate, db=Depends(get_db)):
+    return task_service.create_task_and_queue(db, request)
