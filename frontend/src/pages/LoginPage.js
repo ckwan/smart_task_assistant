@@ -19,8 +19,8 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      const { user, token } = await loginUser(email, password);
-      login(user, token);
+      const { user, access_token } = await loginUser(email, password);
+      login(user, access_token);
       navigate('/projects');
     } catch (err) {
       setError(err.message);

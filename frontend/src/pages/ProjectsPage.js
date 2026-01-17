@@ -41,6 +41,7 @@ export default function ProjectsPage() {
     try {
       const newProject = await projectsAPI.create({
         name: newProjectName,
+        description: "test", // TODO
         color: selectedColor,
       });
 
