@@ -7,19 +7,35 @@ export function AuthProvider({ children }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    // Check for stored token on mount
-    const token = localStorage.getItem('token');
-    const storedUser = localStorage.getItem('user');
+useEffect(() => {
+  const token = localStorage.getItem('token');
+  const storedUser = localStorage.getItem('user');
 
-    if (token && storedUser) {
+  if (token && storedUser) {
+    // Verify token is still valid
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const isExpired = payload.exp * 1000 < Date.now();
+
+      if (isExpired) {
+        // Token expired, clear storage
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        setLoading(false);
+        return;
+      }
+
       setUser(JSON.parse(storedUser));
       setIsAuthenticated(true);
+    } catch (error) {
+      console.error('Invalid token:', error);
     }
-    setLoading(false);
-  }, []);
+  }
+  setLoading(false);
+}, []);
 
   const login = (userData, token) => {
+    console.log(token)
     localStorage.setItem('token', token);
     localStorage.setItem('user', JSON.stringify(userData));
     setUser(userData);
