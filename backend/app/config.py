@@ -1,8 +1,10 @@
 import os
+from requests import Session
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
+from app.models.user import User
 import jwt
 
 
@@ -39,16 +41,26 @@ def get_db():
 # PyJWT docs: https://pyjwt.readthedocs.io/en/stable/
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
-def get_current_user(token: str = Depends(oauth2_scheme)):
+def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[JWT_ALGORITHM])
-        user_id: str = payload.get("sub")
-        if user_id is None:
+        user_name: str = payload.get("sub")
+
+        if user_name is None:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Could not validate credentials",
             )
-        return user_id
+
+        user = db.query(User).filter(User.email == user_name).first()
+
+        if user is None:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="User not found",
+            )
+        return user
+
     except jwt.ExpiredSignatureError:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -59,3 +71,4 @@ def get_current_user(token: str = Depends(oauth2_scheme)):
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Could not validate credentials",
         )
+
