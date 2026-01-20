@@ -7,12 +7,14 @@ def create_task(
     db: Session,
     title: str,
     project_id: int,
-    status: TaskStatus
+    status: TaskStatus,
+    description: str | None = None,
+    assigned_user_id: int | None = None,
 ):
     query = text("""
-        INSERT INTO tasks (title, project_id, status)
-        VALUES (:title, :project_id, :status)
-        RETURNING id, title, status, project_id, created_at
+        INSERT INTO tasks (title, project_id, status, description, assigned_user_id)
+        VALUES (:title, :project_id, :status, :description, :assigned_user_id)
+        RETURNING id, title, status, project_id, created_at, description, assigned_user_id
     """)
 
     result = db.execute(
@@ -21,6 +23,8 @@ def create_task(
             "title": title,
             "project_id": project_id,
             "status": status.value,
+            "description": description,
+            "assigned_user_id": assigned_user_id,
         },
     ).mappings().first()
 
@@ -69,7 +73,7 @@ def delete_task(db: Session, task_id: int):
 
 def get_tasks_for_project(db: Session, project_id: int):
     query = text("""
-        SELECT id, title, status, project_id, created_at
+        SELECT id, title, status, project_id, created_at, description, assigned_user_id
         FROM tasks
         WHERE project_id = :project_id
         ORDER BY created_at

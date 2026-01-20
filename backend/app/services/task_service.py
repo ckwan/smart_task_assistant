@@ -23,7 +23,9 @@ def create_task(db: Session, request: TaskCreate):
         db,
         title=request.title,
         project_id=request.project_id,
-        status=TaskStatus(request.status)
+        status=TaskStatus(request.status),
+        description=request.description,
+        assigned_user_id=request.assigned_user_id
     )
 
 

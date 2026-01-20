@@ -13,6 +13,8 @@ class TaskResponse(TaskCreate):
     id: int
     status: str
     created_at: datetime
+    description: str | None
+    assigned_user_id: int | None
 
     # Pydantic v2 replacement for orm_mode
     model_config = ConfigDict(from_attributes=True)
