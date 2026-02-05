@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from app.config import get_db
+from app.database.dependencies import get_db
 from app.schemas.task import TaskCreate, TaskResponse
 from app.services import task_service
 
@@ -22,6 +22,9 @@ def list_tasks(
 ):
     return task_service.list_tasks(db, project_id)
 
+@router.post("/enhance", response_model=str)
+def enhance_task():
+    return task_service.enhance_task("test", "Please prepare slide for next Friday")
 
 # @router.post("/", response_model=TaskResponse)
 # def create_task_endpoint(request: TaskCreate, db=Depends(get_db)):

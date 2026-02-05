@@ -28,7 +28,6 @@ def create_task(
         },
     ).mappings().first()
 
-    db.commit()
     return result
 
 def update_task_status(db: Session, task_id: int, status: TaskStatus):
@@ -47,7 +46,6 @@ def update_task_status(db: Session, task_id: int, status: TaskStatus):
         },
     ).mappings().first()
 
-    db.commit()
     return result
 
 def get_task_by_id(db: Session, task_id: int):
@@ -68,7 +66,7 @@ def delete_task(db: Session, task_id: int):
     """)
 
     result = db.execute(query, {"task_id": task_id}).mappings().first()
-    db.commit()
+
     return result
 
 def get_tasks_for_project(db: Session, project_id: int):

@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.models.project import Project
 from app.schemas.project import ProjectCreate, ProjectResponse
-from app.config import get_db, get_current_user
+from app.database.dependencies import get_db, get_current_user
 from app.services import project_service
 
 router = APIRouter(prefix="/projects", tags=["projects"])

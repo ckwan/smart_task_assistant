@@ -10,7 +10,11 @@ origins = [
     "http://localhost:5000",
 ]
 
-app = FastAPI()
+app = FastAPI(
+    title="Smart Task Assistant",
+    description="Create, update, task, worker queue performance, and get AI-generated summaries and task prioritizations.",
+    version="1.0.0"
+)
 
 app.router.prefix = "/api"
 app.include_router(auth.router, prefix="/auth", tags=["auth"])

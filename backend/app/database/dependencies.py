@@ -1,29 +1,20 @@
-import os
-from requests import Session
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, declarative_base
+import jwt
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
+from .session import SessionLocal
+import os
+from datetime import datetime, timedelta
+from jose import jwt
 from app.models.user import User
-import jwt
-
+from requests import Session
 
 # -------------------------------------------------------------------
 # ENVIRONMENT VARIABLES
 # -------------------------------------------------------------------
 # Docs: https://12factor.net/config
-DATABASE_URL = os.getenv("DATABASE_URL", "postgresql+psycopg2://postgres:postgres@db:5432/taskdb")
 SECRET_KEY = os.getenv("SECRET_KEY", "your_secret_key") # Replace with a secure key in production
 JWT_ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES= 60
-
-# -------------------------------------------------------------------
-# DATABASE SETUP
-# -------------------------------------------------------------------
-# SQLAlchemy docs: https://docs.sqlalchemy.org/en/20/orm/session_basics.html
-engine = create_engine(DATABASE_URL, pool_pre_ping=True)
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-Base = declarative_base()
 
 
 def get_db():
@@ -33,6 +24,12 @@ def get_db():
     finally:
         db.close()
 
+def create_access_token(data: dict, expires_minutes: int = ACCESS_TOKEN_EXPIRE_MINUTES):
+    to_encode = data.copy()
+    expire = datetime.utcnow() + timedelta(minutes=expires_minutes)
+    to_encode.update({"exp": expire})
+    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=JWT_ALGORITHM)
+    return encoded_jwt
 
 # -------------------------------------------------------------------
 # AUTH / SECURITY

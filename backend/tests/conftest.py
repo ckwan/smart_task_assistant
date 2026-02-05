@@ -3,7 +3,7 @@ import pytest
 from sqlalchemy import text, create_engine
 from sqlalchemy.orm import sessionmaker
 from app.models.base import Base
-from app.config import DATABASE_URL
+from app.database.session import DATABASE_URL
 
 engine = create_engine(DATABASE_URL)
 TestingSessionLocal = sessionmaker(bind=engine)
