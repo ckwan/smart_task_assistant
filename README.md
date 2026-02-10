@@ -1,12 +1,12 @@
 ### Why I Built This Project
 
-The Smart Task Assistant was created to demonstrate a production-like, asynchronous backend system capable of:
+The Smart Task Assistant was created to demonstrate a production-like backend system capable of:
 
 - Handling task/project CRUD operations with FastAPI and PostgreSQL
-- Processing AI-powered suggestions asynchronously using RabbitMQ and Celery
-- Integrating AI services (LLM/RAG) without blocking API latency
+- Enriching tasks with AI-powered suggestions using a synchronous LLM workflow
+- Designing the backend in a modular way for future asynchronous processing
 
-This project demonstrates my ability to design and implement scalable, maintainable backend architectures and showcases practical experience with modern async workflows and AI integrations.
+This project showcases my ability to design and implement scalable, maintainable backend architectures and demonstrates practical experience with modern AI integrations.
 
 
 ## System Architecture
@@ -14,22 +14,14 @@ Smart Task Assistant front/backend system
 
 ## Design Decisions
 - **Why FastAPI?**
+FastAPI was chosen for its high performance, automatic OpenAPI documentation, and modular architecture. It enables rapid iteration while remaining production-ready and easy to scale.
 
-FastAPI was chosen for its async-first architecture, automatic OpenAPI
-documentation, and high performance. It enables rapid iteration while remaining
-production-ready and easy to scale.
+- **Why synchronous AI enrichment?**
+Currently, task enrichment occurs synchronously to provide immediate feedback to the user. This keeps the workflow simple and responsive while demonstrating reliable LLM integration and structured output parsing.
 
-- **Why RabbitMQ + Celery?**
+- **Future async improvements**
+The backend is designed to support asynchronous processing (e.g., RabbitMQ + Celery) for long-running AI tasks or notifications. This separation would allow horizontal scaling of workers independently from the API layer without changing the core architecture.
 
-AI-powered task enrichment can take several seconds and should not block user
-requests. RabbitMQ and Celery allow long-running jobs to be processed
-asynchronously while maintaining reliability, retries, and observability.
-
-- **Why async AI processing?**
-
-Separating AI processing from the request lifecycle keeps API response times low,
-improves user experience, and enables horizontal scaling of workers independently
-from the API layer.
 
 ---
 The diagram below illustrates request flow, data persistence, and async task execution.
@@ -38,13 +30,12 @@ The diagram below illustrates request flow, data persistence, and async task exe
 
 ![Swagger OpenAPI Documentation](diagrams/openapi.png)
 
-## Async Workflow
+## Synchronous Workflow
 1. The client sends a request to create or enhance a task.
-2. FastAPI validates authentication and persists initial task data.
-3. A message is published to RabbitMQ for AI processing.
-4. Celery workers consume the message and invoke AI services.
-5. The processed result is stored back in PostgreSQL.
-6. The client retrieves updated task data via polling or refresh.
+2. FastAPI validates authentication and persists the initial task data.
+3. The LLM (LLaMA) enriches the task synchronously with enhanced description, subtasks, priority, and acceptance criteria.
+4. The processed result is stored back in PostgreSQL.
+5. The client receives the enriched task immediately in the response.
 
 ## Performance & Metrics
 
@@ -52,13 +43,12 @@ The diagram below illustrates request flow, data persistence, and async task exe
 
 The Smart Task Assistant is designed with scalability in mind:
 
-- **Async task processing** via RabbitMQ + Celery allows horizontal scaling of workers for high throughput.
-- **FastAPI backend** handles requests efficiently without blocking on heavy AI computations.
-- **PostgreSQL** serves as the source of truth, supporting multiple concurrent CRUD operations.
-- **AI workflows and notifications** are decoupled, enabling independent scaling as the number of tasks or users grows.
+- Modular backend design separates API, domain logic, and AI enrichment, enabling future horizontal scaling.
+- System is designed to support asynchronous processing (RabbitMQ + Celery) for large-scale AI enrichment if needed.
 
 
 ## Future Improvements
-- Redis caching for frequently accessed tasks and project metadata
-- Rate limiting to protect AI endpoints and prevent abuse
-- Multi-tenant scaling with per-user quotas and isolated workloads
+- Add RabbitMQ + Celery for background task enrichment and email/slack notifications.
+- Redis caching for frequently accessed tasks and project metadata.
+- Rate limiting to protect AI endpoints and prevent abuse.
+- Multi-tenant scaling with per-user quotas and isolated workloads.
